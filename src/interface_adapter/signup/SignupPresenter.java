@@ -3,11 +3,13 @@ package interface_adapter.signup;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.ViewManagerModel;
+import use_case.clear_users.ClearOutputData;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public class SignupPresenter implements SignupOutputBoundary {
 
@@ -42,6 +44,14 @@ public class SignupPresenter implements SignupOutputBoundary {
     public void prepareFailView(String error) {
         SignupState signupState = signupViewModel.getState();
         signupState.setUsernameError(error);
+        signupViewModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareClear(ClearOutputData allUsers) {
+        SignupState signupState = signupViewModel.getState();
+        signupState.setAllUsers(allUsers.getAllUsers());
+        signupViewModel.setState(signupState);
         signupViewModel.firePropertyChanged();
     }
 }

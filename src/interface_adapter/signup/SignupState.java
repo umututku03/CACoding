@@ -1,5 +1,9 @@
 package interface_adapter.signup;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SignupState {
     private String username = "";
     private String usernameError = null;
@@ -7,6 +11,7 @@ public class SignupState {
     private String passwordError = null;
     private String repeatPassword = "";
     private String repeatPasswordError = null;
+    private List<String> allUsers;
 
     public SignupState(SignupState copy) {
         username = copy.username;
@@ -15,6 +20,7 @@ public class SignupState {
         passwordError = copy.passwordError;
         repeatPassword = copy.repeatPassword;
         repeatPasswordError = copy.repeatPasswordError;
+        allUsers = copy.allUsers;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
@@ -67,6 +73,14 @@ public class SignupState {
 
     public void setRepeatPasswordError(String repeatPasswordError) {
         this.repeatPasswordError = repeatPasswordError;
+    }
+
+    public List<String> getAllUsers(){
+        return this.allUsers;
+    }
+
+    public void setAllUsers(List<String> allUsers){
+        this.allUsers = allUsers;
     }
 
     @Override

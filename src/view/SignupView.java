@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.clear_users.ClearController;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
@@ -12,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     public final String viewName = "sign up";
@@ -28,7 +30,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     // TODO Note: this is the new JButton for clearing the users file
     private final JButton clear;
 
-    public SignupView(SignupController controller, SignupViewModel signupViewModel) {
+    public SignupView(SignupController controller, SignupViewModel signupViewModel, ClearController clearController) {
 
         this.signupController = controller;
         this.signupViewModel = signupViewModel;
@@ -54,6 +56,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         //      a CLEAR_BUTTON_LABEL constant which is defined in the SignupViewModel class.
         //      You need to add this "clear" button to the "buttons" panel.
         clear = new JButton(SignupViewModel.CLEAR_BUTTON_LABEL);
+        buttons.add(clear);
 
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -77,9 +80,14 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         //      you can complete this.
         clear.addActionListener(
                 new ActionListener() {
-                    @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        if (e.getSource().equals(clear)) {
+                            try {
+                                clearController.execute();
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
                     }
                 }
         );
@@ -172,6 +180,9 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         SignupState state = (SignupState) evt.getNewValue();
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
+        }
+        if (!state.getAllUsers().isEmpty()){
+            JOptionPane.showMessageDialog(this, state.getAllUsers());
         }
     }
 }
